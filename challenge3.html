@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu de clic</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .game-container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .click-button {
+            padding: 15px 30px;
+            font-size: 1.5rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .click-button:hover {
+            background-color: #45a049;
+        }
+
+        .score-display {
+            font-size: 1.5rem;
+            margin: 20px 0;
+            color: #555;
+        }
+
+        .upgrades {
+            margin-top: 20px;
+        }
+
+        .upgrade {
+            padding: 10px;
+            margin: 5px 0;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .upgrade:hover {
+            background-color: #eee;
+        }
+
+        .upgrade.disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Jeu de clic</h1>
+        <div class="score-display">Score: <span id="score">0</span></div>
+        <button class="click-button" id="click-button">Cliquez ici !</button>
+        <div class="upgrades" id="upgrades"></div>
+    </div>
+
+    <script>
+        let score = 0;
+        let clickValue = 1;
+        let upgrades = [
+            { name: "Double clic", cost: 250, multiplier: 2, unlocked: false },
+            { name: "Triple clic", cost: 500, multiplier: 3, unlocked: false },
+            { name: "Quadruple clic", cost: 1000, multiplier: 4, unlocked: false },
+        ];
+
+        const scoreDisplay = document.getElementById('score');
+        const clickButton = document.getElementById('click-button');
+        const upgradesContainer = document.getElementById('upgrades');
+
+        // Met à jour l'affichage du score
+        function updateScore() {
+            scoreDisplay.textContent = score;
+        }
+
+        // Met à jour les améliorations disponibles
+        function updateUpgrades() {
+            upgradesContainer.innerHTML = '';
+            upgrades.forEach((upgrade, index) => {
+                if (score >= upgrade.cost / 2 || upgrade.unlocked) {
+                    const upgradeElement = document.createElement('div');
+                    upgradeElement.className = `upgrade ${score >= upgrade.cost ? '' : 'disabled'}`;
+                    upgradeElement.innerHTML = `
+                        ${upgrade.name} (Coût: ${upgrade.cost} points) - Valeur du clic x${upgrade.multiplier}
+                    `;
+                    upgradeElement.addEventListener('click', () => buyUpgrade(index));
+                    upgradesContainer.appendChild(upgradeElement);
+                }
+            });
+        }
+
+        // Acheter une amélioration
+        function buyUpgrade(index) {
+            const upgrade = upgrades[index];
+            if (score >= upgrade.cost && !upgrade.unlocked) {
+                score -= upgrade.cost;
+                clickValue *= upgrade.multiplier;
+                upgrade.unlocked = true;
+                if (index + 1 < upgrades.length) {
+                    upgrades[index + 1].cost = upgrade.cost * 2; // Augmente le coût de la prochaine amélioration
+                }
+                updateScore();
+                updateUpgrades();
+            }
+        }
+
+        // Gestion du clic
+        clickButton.addEventListener('click', () => {
+            score += clickValue;
+            updateScore();
+            updateUpgrades();
+        });
+
+        // Initialisation
+        updateUpgrades();
+    </script>
+</body>
+</html>

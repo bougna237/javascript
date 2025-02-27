@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        .completed {
+            text-decoration: line-through;
+            color: gray;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .delete-task {
+            margin-left: 10px;
+            color: rgb(0, 255, 85);
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>To-Do List </h1>
+    <input type="text" id="new-task" placeholder="Ajouter une nouvelle tâche">
+    <button id="add-task">Add Task</button>
+    <ul id="task-list"></ul>
+
+    <script>
+        document.getElementById("add-task").addEventListener("click", function() {
+            const taskText = document.getElementById("new-task").value;
+            if (taskText === "") return;
+
+            const li = document.createElement("li");
+            li.className = "task-item";
+
+            // Texte de la tâche
+            const span = document.createElement("span");
+            span.textContent = taskText;
+            span.style.cursor = "pointer"; 
+            span.addEventListener("click", function() {
+                span.classList.toggle("completed"); 
+            });
+            li.appendChild(span);
+
+            // Élément pour supprimer la tâche
+            const deleteLink = document.createElement("span");
+            deleteLink.className = "delete-task";
+            deleteLink.textContent = "Supprimer";
+            deleteLink.addEventListener("click", function() {
+                li.remove();
+            });
+            li.appendChild(deleteLink);
+
+            document.getElementById("task-list").appendChild(li);
+            document.getElementById("new-task").value = "";
+        });
+    </script>
+</body>
+</html>

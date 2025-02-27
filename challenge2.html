@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jeu de frappe de lettres</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200vh;
+            margin: 200px;
+            background-color: #af4444;
+        }
+
+        .game-container {
+            text-align: center;
+            background-color: #fff;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .letter-display {
+            font-size: 7rem;
+            font-weight: bold;
+            margin: 20px 0;
+            color: #333;
+        }
+
+        .score-display {
+            font-size: 1.5rem;
+            color: #555;
+        }
+
+        .instructions {
+            font-size: 1.2rem;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Jeu de frappe de lettres</h1>
+        <p class="instructions">Appuyez sur la barre d'espace pour commencer.</p>
+        <div id="letter-display" class="letter-display">-</div>
+        <div id="score-display" class="score-display">Score: 0</div>
+    </div>
+
+    <script>
+        let score = 0;
+        let currentLetter = "";
+        let gameStarted = false;
+
+        const letterDisplay = document.getElementById('letter-display');
+        const scoreDisplay = document.getElementById('score-display');
+
+        // Génère une lettre aléatoire
+        function getRandomLetter() {
+            const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            return letters[Math.floor(Math.random() * letters.length)];
+        }
+
+        // Met à jour le score affiché
+        function updateScore() {
+            scoreDisplay.textContent = `Score: ${score}`;
+        }
+
+        // Démarre le jeu
+        function startGame() {
+            gameStarted = true;
+            currentLetter = getRandomLetter();
+            letterDisplay.textContent = currentLetter;
+            updateScore();
+        }
+
+        // Écoute les touches du clavier
+        document.addEventListener("keydown", (event) => {
+            if (!gameStarted && event.code === "Space") {
+                startGame();
+            } else if (gameStarted && event.key.toUpperCase() === currentLetter) {
+                score++;
+                currentLetter = getRandomLetter();
+                letterDisplay.textContent = currentLetter;
+                updateScore();
+            }
+        });
+    </script>
+</body>
+</html>
